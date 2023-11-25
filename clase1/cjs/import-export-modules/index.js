@@ -7,8 +7,8 @@
 */
 
 const calc = require('./calc')
-console.log(calc.sum(1,2))
-console.log(calc.sub(5,3))
+console.log(calc.sum(1, 2))
+console.log(calc.sub(5, 3))
 
 const greet = require('./greet')
 console.log(greet('Diego'))
