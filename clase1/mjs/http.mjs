@@ -6,12 +6,16 @@ console.log(process.env)
 const desiredPort = process.env.PORT ?? 3000
 
 const server = http.createServer((req, res) => {
-  console.log('request received')
-  res.end('Hola mundo')
+  console.log('Request received')
+  res.end('Hola')
 })
 
 findAvailablePort(desiredPort).then(port => {
   server.listen(port, () => {
-    console.log(`server listening on port http://localhost:${port}`)
+    console.log(`Server listening on port http://localhost:${port}`)
   })
 })
+
+// node http.mjs
+// node --watch http.mjs
+// curl http://localhost:1234
