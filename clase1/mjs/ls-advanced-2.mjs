@@ -1,5 +1,6 @@
 import { readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import picocolors  from 'picocolors';   
 
 const folder = process.argv[2] ?? '.'
 
@@ -13,7 +14,7 @@ async function ls(folder) {
 
     } catch (error) {
 
-        console.error(`No se pudo leer el directorio ${folder}`)
+        console.error(picocolors.red(`No se pudo leer el directorio ${folder}`))
         process.exit(1)
 
     }
@@ -40,7 +41,7 @@ async function ls(folder) {
         const fileSize = stats.size.toString()
         const fileModified = stats.mtime.toLocaleString()
 
-        return `${fileType.padEnd(8)} ${file.padEnd(30)} ${fileSize.padEnd(10)} ${fileModified}`
+        return `${picocolors.cyan(fileType.padEnd(8))} ${picocolors.blue(file.padEnd(30))} ${picocolors.green(fileSize.padEnd(10))} ${picocolors.magenta(fileModified)}`
 
     })
 
