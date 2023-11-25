@@ -1,28 +1,38 @@
 import http from 'node:http' // Protocolo HTTP
-
-console.log(process.env)
+import { readFile } from 'node:fs' // Filesystem
 
 const desiredPort = process.env.PORT ?? 1234
 
 const processRequest = (req, res) => {
-  // res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
 
   if (req.url === '/') {
-    res.statusCode = 200 // OK
-    res.end('<h1>Bienvenido</h1>')
+    res.end('<h1>Mi página</h1>')
+  } else if (req.url === '/imagen') {
+    readFile('./clase2/placa.png', (err, data) => {
+      if (err) {
+        res.statusCode = 500
+        res.end('<h1>500 Internal Server Error</h1>')
+      } else {
+        res.setHeader('Content-Type', 'image/png')
+        res.end(data)
+      }
+    })
   } else if (req.url === '/contacto') {
-    res.statusCode = 200 // OK
     res.end('<h1>Contacto</h1>')
   } else {
-    res.statusCode = 404 // Not found
-    res.end('<h1>Error 404 (Not Found) </h1>')
+    res.statusCode = 404 // Not Found
+    res.end('<h1>404</h1>')
   }
 }
 
 const server = http.createServer(processRequest)
 
 server.listen(desiredPort, () => {
-  console.log(`Server listening on port http://localhost:${desiredPort}`)
+  console.log(`server listening on port http://localhost:${desiredPort}`)
 })
+
+// node http.mjs
+// node --watch http.mjs
+// npm run httpserver
+// curl http://localhost:1234
