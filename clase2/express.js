@@ -7,6 +7,8 @@ const app = express()
 
 app.disable('x-powered-by')
 
+// Middleware
+
 app.use(express.json())
 
 app.get('/pokemon/ditto', (req, res) => {
@@ -18,7 +20,8 @@ app.post('/pokemon', (req, res) => {
   res.status(201).json(req.body)
 })
 
-// la última a la que va a llegar
+// Si no coincide con ninguna de las anteriores: 404
+
 app.use((req, res) => {
   res.status(404).send('<h1>404 Not Found</h1>')
 })
