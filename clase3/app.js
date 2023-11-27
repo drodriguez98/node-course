@@ -1,32 +1,40 @@
 const express = require('express')
 const crypto = require('node:crypto')
+const cors = require('cors')
 const movies = require('./movies.json')
 const { validateMovie, validatePartialMovie } = require('./schemas/movies')
 
 const app = express()
 app.use(express.json())
-app.disable('x-powered-by')
 
 // Filtrar origenes CORS
 
-const ACCEPTED_ORIGINS = [
-  'http://localhost:8080',
-  'http://localhost:1234',
-  'http://movies.com',
-  'http://localhost:8080'
-]
+app.use(cors({
+  origin: (origin, callback) => {
+    const ACCEPTED_ORIGINS = [
+      'http://localhost:8080',
+      'http://localhost:1234',
+      'https://movies.com',
+      'https://midu.dev'
+    ]
+
+    if (ACCEPTED_ORIGINS.includes(origin)) {
+      return callback(null, true)
+    }
+
+    if (!origin) {
+      return callback(null, true)
+    }
+
+    return callback(new Error('Not allowed by CORS'))
+  }
+}))
+
+app.disable('x-powered-by')
 
 // Obtener todas las películas. Si se le pasa un género como parámetro, sólo muestra las películas de ese género.
 
 app.get('/movies', (req, res) => {
-  // Cors
-  const origin = req.header('origin')
-
-  // res.header('Access-Control-Allow-Origin', '*')
-  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-  }
-
   const { genre } = req.query
 
   if (genre) {
@@ -88,13 +96,6 @@ app.patch('/movies/:id', (req, res) => {
 app.delete('/movies/:id', (req, res) => {
   const { id } = req.params
 
-  // Cors
-  const origin = req.header('origin')
-
-  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-  }
-
   const movieIndex = movies.findIndex(movie => movie.id === id)
 
   if (movieIndex === -1) { return res.status(404).json({ message: 'Movie not found' }) }
@@ -102,18 +103,6 @@ app.delete('/movies/:id', (req, res) => {
   movies.splice(movieIndex, 1)
 
   return res.json({ message: 'Movie deleted' })
-})
-
-// Cors para métodos complejos
-
-app.options('/movies/:id', (req, res) => {
-  const origin = req.header('origin')
-
-  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
-  }
-  res.send(200)
 })
 
 // Levantar el servidor http en el primer puerto disponible a partir del 1234.
