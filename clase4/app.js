@@ -7,7 +7,7 @@ app.use(json())
 
 // Filtrar origenes CORS
 
-app.use(corsMiddleware)
+// app.use(corsMiddleware)
 
 // Redireccióna a moviesRouter
 
