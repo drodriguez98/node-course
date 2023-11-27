@@ -1,6 +1,7 @@
 const express = require('express')
 const crypto = require('node:crypto')
 const movies = require('./movies.json')
+const { validateMovie } = require('./schemas/movies')
 
 const app = express()
 app.use(express.json())
@@ -26,24 +27,14 @@ app.get('/movies/:id', (req, res) => {
 })
 
 app.post('/movies', (req, res) => {
-  const {
-    title,
-    year,
-    director,
-    duration,
-    poster,
-    genre,
-    rate
-  } = req.body
+  const result = validateMovie(req.body)
+
+  if (result.error) {
+    return res.status(400).json({ error: JSON.parse(result.error.message) })
+  }
   const newMovie = {
     id: crypto.randomUUID(),
-    title,
-    year,
-    director,
-    duration,
-    poster,
-    genre,
-    rate: rate ?? 0
+    ...result.data
   }
   // Esto no sería rest porque estamos guardando el estado de la aplicación en memoria.
   movies.push(newMovie)
