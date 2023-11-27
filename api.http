@@ -15,7 +15,6 @@ Content-Type: application/json
   ]
 }
 
-
 ### Obtener todas las películas. 
 
 GET http://localhost:1234/movies
@@ -51,10 +50,10 @@ Content-Type: application/json
 
 ### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
 
-PATCH http://localhost:1234/movies/b29553fa-e09e-4f3f-8ec2-9ef41a59de98
+PATCH http://localhost:1234/movies/e613460b-146f-4382-b5de-cc89106b62cd
 Content-Type: application/json
 
 {
-  "year": 1993,
-  "duration": 123
+  "year": 1999,
+  "duration": 154
 }
