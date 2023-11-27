@@ -1,0 +1,43 @@
+### Recuperar información del pokemon ditto
+
+GET http://localhost:1234/pokemon/ditto
+
+### Para crear un Pokemon
+POST http://localhost:1234/pokemon
+Content-Type: application/json
+{
+  "name": "ditto",
+  "type": "normal",
+  "moves": [
+      "transform"
+  ]
+}
+
+### Recuperar todas las películas
+
+GET http://localhost:1234/movies
+
+### Recuperar una película por su id
+
+GET http://localhost:1234/movies/5ad1a235-0d9c-410a-b32b-220d91689a08
+
+### Recuperar todas las películas por un género
+
+GET http://localhost:1234/movies?genre=Crime   
+
+### Crear una película con POST
+
+POST http://localhost:1234/movies
+Content-Type: application/json
+
+{
+  "title": "The Matrix",
+  "year": 1999,
+  "director": "Lana Wachowski",
+  "duration": 154,
+  "poster": "https://www.themoviedb.org/t/p/original/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+  "genre": [
+    "Action",
+    "Comedy"
+  ]
+}
