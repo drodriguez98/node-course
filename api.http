@@ -25,7 +25,7 @@ GET http://localhost:1234/movies/5ad1a235-0d9c-410a-b32b-220d91689a08
 
 GET http://localhost:1234/movies?genre=Crime   
 
-### Crear una película con POST
+### Crear una película con POST utilizando validaciones de zod
 
 POST http://localhost:1234/movies
 Content-Type: application/json
@@ -42,17 +42,11 @@ Content-Type: application/json
   ]
 }
 
-### Comprobar validaciones de zod
+### Actualizar una película
 
-POST http://localhost:1234/movies
+PATCH http://localhost:1234/movies/bd632929-f636-4414-9766-9502d947b183
 Content-Type: application/json
+
 {
-  "year": 1999,
-  "director": "Lana Wachowski",
-  "duration": 154,
-  "poster": "https://www.themoviedb.org/t/p/original/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
-  "genre": [
-    "Action",
-    "Comedy"
-  ]
+  "year": 1999
 }
