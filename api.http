@@ -2,7 +2,9 @@
 
 GET http://localhost:1234/pokemon/ditto
 
+
 ### Para crear un Pokemon
+
 POST http://localhost:1234/pokemon
 Content-Type: application/json
 {
@@ -13,19 +15,24 @@ Content-Type: application/json
   ]
 }
 
-### Recuperar todas las películas
+
+### Obtener todas las películas. 
 
 GET http://localhost:1234/movies
+
+
+### Si se le pasa un género como parámetro, sólo muestra las películas de ese género.
+
+GET http://localhost:1234/movies?genre=Crime   
+
 
 ### Recuperar una película por su id
 
 GET http://localhost:1234/movies/5ad1a235-0d9c-410a-b32b-220d91689a08
 
-### Recuperar todas las películas por un género
 
-GET http://localhost:1234/movies?genre=Crime   
+### Crear una película utilizando validaciones zod. Si algún atributo no cumple con los requisitos establecidos en el schema (movies.js), la api no los aceptará.
 
-### Crear una película con POST utilizando validaciones de zod
 
 POST http://localhost:1234/movies
 Content-Type: application/json
@@ -42,7 +49,8 @@ Content-Type: application/json
   ]
 }
 
-### Actualizar una película
+### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
+
 
 PATCH http://localhost:1234/movies/bd632929-f636-4414-9766-9502d947b183
 Content-Type: application/json

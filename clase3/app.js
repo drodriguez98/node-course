@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 app.disable('x-powered-by')
 
-// Obtener todas las películas
+// Obtener todas las películas. Si se le pasa un género como parámetro, sólo muestra las películas de ese género.
 
 app.get('/movies', (req, res) => {
   const { genre } = req.query
@@ -20,7 +20,7 @@ app.get('/movies', (req, res) => {
   res.json(movies)
 })
 
-// Obtener una película por su id
+// Obtener una película por su id con req.params
 
 app.get('/movies/:id', (req, res) => {
   const { id } = req.params
@@ -29,7 +29,7 @@ app.get('/movies/:id', (req, res) => {
   res.status(404).json({ message: 'Movie not found' })
 })
 
-// Crear una película utilizando validaciones zod
+// Crear una película utilizando validaciones zod. Si algún atributo no cumple con los requisitos establecidos en el schema (movies.js), la api no los aceptará.
 
 app.post('/movies', (req, res) => {
   const result = validateMovie(req.body)
@@ -46,7 +46,7 @@ app.post('/movies', (req, res) => {
   res.status(201).json(newMovie)
 })
 
-// Actualizar una película utilizando validaciones zod
+// Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
 
 app.patch('/movies/:id', (req, res) => {
   const { id } = req.params
