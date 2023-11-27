@@ -1,11 +1,20 @@
-const express = require('express')
-const crypto = require('node:crypto')
-const cors = require('cors')
-const movies = require('./movies.json')
-const { validateMovie, validatePartialMovie } = require('./schemas/movies')
+import express, { json } from 'express'
+import { randomUUID } from 'node:crypto'
+import cors from 'cors'
+import { validateMovie, validatePartialMovie } from './schemas/movies.js'
+import { readJSON } from './utils.js'
+
+/* // Importar y leer un json en ESModules
+
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+const movies = require('./movies.json') */
+
+const movies = readJSON('./movies.json')
 
 const app = express()
-app.use(express.json())
+app.use(json())
 
 // Filtrar origenes CORS
 
@@ -58,7 +67,7 @@ app.post('/movies', (req, res) => {
   if (result.error) { return res.status(400).json({ error: JSON.parse(result.error.message) }) }
 
   const newMovie = {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     ...result.data
   }
 
