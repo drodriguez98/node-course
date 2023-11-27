@@ -33,7 +33,6 @@ GET http://localhost:1234/movies/5ad1a235-0d9c-410a-b32b-220d91689a08
 
 ### Crear una película utilizando validaciones zod. Si algún atributo no cumple con los requisitos establecidos en el schema (movies.js), la api no los aceptará.
 
-
 POST http://localhost:1234/movies
 Content-Type: application/json
 
@@ -49,12 +48,13 @@ Content-Type: application/json
   ]
 }
 
+
 ### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
 
-
-PATCH http://localhost:1234/movies/bd632929-f636-4414-9766-9502d947b183
+PATCH http://localhost:1234/movies/b29553fa-e09e-4f3f-8ec2-9ef41a59de98
 Content-Type: application/json
 
 {
-  "year": 1999
+  "year": 1993,
+  "duration": 123
 }
