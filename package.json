@@ -7,13 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "httpserver-1": "node clase2/http.mjs",
     "httpserver-2": "node clase2/routing.js",
-    "httpserver-4": "node clase2/express.js",
-    "httpserver-3": "node clase3/app.js"
+    "httpserver-3": "node clase2/express.js",
+    "httpserver-4": "node clase3/app.js"
   },
   "keywords": [],
   "author": "Diego Rodríguez",
   "license": "ISC",
   "dependencies": {
+    "express": "4.18.2",
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
