@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "httpserver-1": "node clase2/http.mjs",
-    "httpserver-2": "node clase2/routing.js"
+    "httpserver-2": "node clase2/routing.js",
+    "httpserver-3": "node clase2/express.js"
   },
   "keywords": [],
   "author": "Diego Rodríguez",
