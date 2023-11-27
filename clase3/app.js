@@ -7,9 +7,26 @@ const app = express()
 app.use(express.json())
 app.disable('x-powered-by')
 
+// Filtrar origenes CORS
+
+const ACCEPTED_ORIGINS = [
+  'http://localhost:8080',
+  'http://localhost:1234',
+  'http://movies.com',
+  'http://localhost:8080'
+]
+
 // Obtener todas las películas. Si se le pasa un género como parámetro, sólo muestra las películas de ese género.
 
 app.get('/movies', (req, res) => {
+  // Cors
+  const origin = req.header('origin')
+
+  // res.header('Access-Control-Allow-Origin', '*')
+  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+
   const { genre } = req.query
 
   if (genre) {
@@ -66,6 +83,37 @@ app.patch('/movies/:id', (req, res) => {
   movies[movieIndex] = updateMovie
 
   return res.json(updateMovie)
+})
+
+app.delete('/movies/:id', (req, res) => {
+  const { id } = req.params
+
+  // Cors
+  const origin = req.header('origin')
+
+  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+
+  const movieIndex = movies.findIndex(movie => movie.id === id)
+
+  if (movieIndex === -1) { return res.status(404).json({ message: 'Movie not found' }) }
+
+  movies.splice(movieIndex, 1)
+
+  return res.json({ message: 'Movie deleted' })
+})
+
+// Cors para métodos complejos
+
+app.options('/movies/:id', (req, res) => {
+  const origin = req.header('origin')
+
+  if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
+  }
+  res.send(200)
 })
 
 // Levantar el servidor http en el primer puerto disponible a partir del 1234.
