@@ -47,7 +47,6 @@ Content-Type: application/json
   ]
 }
 
-
 ### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
 
 PATCH http://localhost:1234/movies/e613460b-146f-4382-b5de-cc89106b62cd
@@ -57,3 +56,7 @@ Content-Type: application/json
   "year": 1999,
   "duration": 154
 }
+
+### Borrar una película
+
+DELETE http://localhost:1234/movies/19902f1f-3bac-4386-ab10-df7daaacb3e1
