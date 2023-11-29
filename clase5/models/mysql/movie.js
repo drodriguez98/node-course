@@ -12,17 +12,21 @@ const connectionString = process.env.DATABASE_URL ?? DEFAULT_CONFIG
 const connection = await mysql.createConnection(connectionString)
 
 export class MovieModel {
-  static async getAll ({ genre }) {
-    if (genre) {
-      // Buscar el ID del género proporcionado. Si no se encuentra el género, retornar un array vacío.
+  // Obtener todas las películas con sus géneros
 
+  static async getAll ({ genre }) {
+    // Si se envía un género, se filtarán las películas por ese género.
+    if (genre) {
+      // Buscar el ID del género proporcionado.
       const lowerCaseGenre = genre.toLowerCase()
 
       const [genres] = await connection.query('SELECT id, name FROM genre WHERE LOWER(name) = ?;', [lowerCaseGenre])
 
+      // Si no se encuentra el género, retornar un array vacío.
       if (genres.length === 0) return []
 
-      const [{ id }] = genres // Obtener el ID del primer resultado de género
+      // Obtener el ID del primer resultado de género
+      const [{ id }] = genres
 
       // Obtener todas las películas asociadas al género desde la tabla movie_genres
 
@@ -62,7 +66,7 @@ export class MovieModel {
     )
 
     const movies = moviesData.map(movie => ({
-      id: movie.id,
+      // id: movie.id,
       title: movie.title,
       year: movie.year,
       director: movie.director,
@@ -74,6 +78,8 @@ export class MovieModel {
 
     return movies
   }
+
+  // Obtener una película por su id
 
   static async getById ({ id }) {
     const [movies] = await connection.query(
@@ -101,7 +107,7 @@ export class MovieModel {
     // Formatear la película con los géneros obtenidos
 
     const formattedMovie = {
-      id: movieData.id,
+      // id: movieData.id,
       title: movieData.title,
       year: movieData.year,
       director: movieData.director,
@@ -113,6 +119,8 @@ export class MovieModel {
 
     return formattedMovie
   }
+
+  // Crear una película
 
   static async create ({ input }) { // genre es un array
     try {
@@ -164,28 +172,7 @@ export class MovieModel {
     }
   }
 
-  static async delete ({ id }) {
-    try {
-      const deleteMovieGenresQuery = await connection.query(
-        'DELETE FROM movie_genres WHERE movie_id = UUID_TO_BIN(?);',
-        [id]
-      )
-
-      const deleteMovieQuery = await connection.query(
-        'DELETE FROM movie WHERE id = UUID_TO_BIN(?);',
-        [id]
-      )
-
-      if (deleteMovieQuery[0].affectedRows > 0) {
-        return { message: 'Movie deleted successfully' }
-      } else {
-        throw new Error('Movie not found')
-      }
-    } catch (error) {
-      console.error('Error deleting movie:', error)
-      throw new Error('Error deleting movie')
-    }
-  }
+  // Actualizar una película
 
   static async update ({ id, input }) {
     try {
@@ -221,7 +208,7 @@ export class MovieModel {
       }
 
       const updatedMovie = {
-        id: updatedMovieData[0].id,
+        // id: updatedMovieData[0].id,
         title: updatedMovieData[0].title,
         year: updatedMovieData[0].year,
         director: updatedMovieData[0].director,
@@ -234,6 +221,24 @@ export class MovieModel {
     } catch (error) {
       console.error('Error updating movie:', error)
       throw new Error('Error updating movie')
+    }
+  }
+
+  static async delete ({ id }) {
+    try {
+      const deleteMovieQuery = await connection.query(
+        'DELETE FROM movie WHERE id = UUID_TO_BIN(?);',
+        [id]
+      )
+
+      if (deleteMovieQuery[0].affectedRows > 0) {
+        return { message: 'Movie deleted successfully' }
+      } else {
+        throw new Error('Movie not found')
+      }
+    } catch (error) {
+      console.error('Error deleting movie:', error)
+      throw new Error('Error deleting movie')
     }
   }
 }
