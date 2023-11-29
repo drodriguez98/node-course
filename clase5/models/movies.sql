@@ -64,6 +64,9 @@ VALUES
     ((SELECT id FROM movie WHERE title = 'Pulp Fiction'), (SELECT id FROM genre WHERE name = 'Crime')),
     ((SELECT id FROM movie WHERE title = 'Pulp Fiction'), (SELECT id FROM genre WHERE name = 'Drama'))   
 ;
+
+ALTER TABLE movie_genres ADD CONSTRAINT fk_movie_id FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE;
+
 CREATE USER 'nodeCourse'@'localhost' IDENTIFIED BY ''; -- Crea el usuario sin contraseña
 
 GRANT ALL PRIVILEGES ON *.* TO 'nodeCourse'@'localhost' WITH GRANT OPTION;
