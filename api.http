@@ -27,7 +27,7 @@ GET http://localhost:1234/movies?genre=Crime
 
 ### Recuperar una película por su id
 
-GET http://localhost:1234/movies/5ad1a235-0d9c-410a-b32b-220d91689a08
+GET http://localhost:1234/movies/9e61a3dd-8e48-11ee-8386-0a0027000012
 
 
 ### Crear una película utilizando validaciones zod. Si algún atributo no cumple con los requisitos establecidos en el schema (movies.js), la api no los aceptará.
@@ -44,16 +44,17 @@ Content-Type: application/json
   "genre": [
     "Action",
     "Comedy"
-  ]
+  ],
+  "rate": 8.9
 }
 
 ### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
 
-PATCH http://localhost:1234/movies/e613460b-146f-4382-b5de-cc89106b62cd
+PATCH http://localhost:1234/movies/6
 Content-Type: application/json
 
 {
-  "year": 1999,
+  "year": 1993,
   "duration": 154
 }
 
