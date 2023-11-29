@@ -1,19 +1,16 @@
 import { Router } from 'express'
 import { MovieController } from '../controllers/movies.js'
 
-/*
-// Importar y leer un json en ESModules
+export const createMovieRouter = ({ movieModel }) => {
+  const moviesRouter = Router()
 
-import { createRequire } from 'node:module'
+  const movieController = new MovieController({ movieModel })
 
-const require = createRequire(import.meta.url)
-const movies = require('./movies.json')
-*/
+  moviesRouter.get('/', movieController.getAll)
+  moviesRouter.post('/', movieController.create)
+  moviesRouter.get('/:id', movieController.getById)
+  moviesRouter.delete('/:id', movieController.delete)
+  moviesRouter.patch('/:id', movieController.update)
 
-export const moviesRouter = Router()
-
-moviesRouter.get('/', MovieController.getAll)
-moviesRouter.post('/', MovieController.create)
-moviesRouter.get('/:id', MovieController.getById)
-moviesRouter.delete('/:id', MovieController.delete)
-moviesRouter.patch('/:id', MovieController.update)
+  return moviesRouter
+}
