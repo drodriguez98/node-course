@@ -22,12 +22,12 @@ GET http://localhost:1234/movies
 
 ### Si se le pasa un género como parámetro, sólo muestra las películas de ese género.
 
-GET http://localhost:1234/movies?genre=Crime   
+GET http://localhost:1234/movies?genre=Action   
 
 
 ### Recuperar una película por su id
 
-GET http://localhost:1234/movies/9e61a3dd-8e48-11ee-8386-0a0027000012
+GET http://localhost:1234/movies/c5dcf3e5-8ed4-11ee-8386-0a0027000012
 
 
 ### Crear una película utilizando validaciones zod. Si algún atributo no cumple con los requisitos establecidos en el schema (movies.js), la api no los aceptará.
@@ -36,16 +36,13 @@ POST http://localhost:1234/movies
 Content-Type: application/json
 
 {
-  "title": "The Matrix",
-  "year": 1999,
-  "director": "Lana Wachowski",
-  "duration": 154,
-  "poster": "https://www.themoviedb.org/t/p/original/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
-  "genre": [
-    "Action",
-    "Comedy"
-  ],
-  "rate": 8.9
+    "title": "Avatar",
+    "year": 2009,
+    "director": "James Cameron",
+    "duration": 162,
+    "poster": "https://i.etsystatic.com/35681979/r/il/dfe3ba/3957859451/il_fullxfull.3957859451_h27r.jpg",
+    "genre": ["Action", "Adventure", "Fantasy"],
+    "rate": 7.8
 }
 
 ### Actualizar una película utilizando validaciones zod. Se puede modificar uno o varios atributos excepto el id ya que éste no lo incluímos en el schema.
