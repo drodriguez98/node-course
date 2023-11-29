@@ -10,7 +10,10 @@
     "httpserver-2": "node clase2/routing.js",
     "httpserver-3": "node clase2/express.js",
     "httpserver-4": "node api/app.js",
-    "httpserver-5": "node clase4/app.js"
+    "httpserver-5": "node clase4/app.js",
+    "httpserver-6": "node clase5/app.js",
+    "start:mysql": "node clase5/server-with-mysql.js",
+    "start:local": "node clase5/server-with-local.js"
   },
   "keywords": [],
   "author": "Diego Rodríguez",
