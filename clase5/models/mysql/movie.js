@@ -14,9 +14,9 @@ const connection = await mysql.createConnection(connectionString)
 export class MovieModel {
   static async getAll ({ genre }) {
     if (genre) {
-      const lowerCaseGenre = genre.toLowerCase()
-
       // Buscar el ID del género proporcionado. Si no se encuentra el género, retornar un array vacío.
+
+      const lowerCaseGenre = genre.toLowerCase()
 
       const [genres] = await connection.query('SELECT id, name FROM genre WHERE LOWER(name) = ?;', [lowerCaseGenre])
 
@@ -62,7 +62,7 @@ export class MovieModel {
     )
 
     const movies = moviesData.map(movie => ({
-      // id: movie.id,
+      id: movie.id,
       title: movie.title,
       year: movie.year,
       director: movie.director,
@@ -101,7 +101,7 @@ export class MovieModel {
     // Formatear la película con los géneros obtenidos
 
     const formattedMovie = {
-      // id: movieData.id,
+      id: movieData.id,
       title: movieData.title,
       year: movieData.year,
       director: movieData.director,
@@ -165,10 +165,75 @@ export class MovieModel {
   }
 
   static async delete ({ id }) {
-    // ejercio fácil: crear el delete
+    try {
+      const deleteMovieGenresQuery = await connection.query(
+        'DELETE FROM movie_genres WHERE movie_id = UUID_TO_BIN(?);',
+        [id]
+      )
+
+      const deleteMovieQuery = await connection.query(
+        'DELETE FROM movie WHERE id = UUID_TO_BIN(?);',
+        [id]
+      )
+
+      if (deleteMovieQuery[0].affectedRows > 0) {
+        return { message: 'Movie deleted successfully' }
+      } else {
+        throw new Error('Movie not found')
+      }
+    } catch (error) {
+      console.error('Error deleting movie:', error)
+      throw new Error('Error deleting movie')
+    }
   }
 
   static async update ({ id, input }) {
-    // ejercicio fácil: crear el update
+    try {
+      const allowedFields = ['title', 'year', 'duration', 'director', 'rate', 'poster']
+
+      const updateValues = []
+      const updateFields = Object.keys(input)
+        .filter(field => allowedFields.includes(field) && input[field] !== undefined)
+        .map(field => {
+          updateValues.push(input[field])
+          return `${field} = ?`
+        })
+
+      if (updateFields.length === 0) {
+        throw new Error('No fields provided for update')
+      }
+
+      updateValues.push(id) // Agregar el ID para la condición WHERE
+
+      const updateQuery = `UPDATE movie SET ${updateFields.join(', ')} WHERE id = UUID_TO_BIN(?);`
+
+      await connection.query(updateQuery, updateValues)
+
+      // Obtener la película actualizada después de la actualización
+      const [updatedMovieData] = await connection.query(
+        `SELECT BIN_TO_UUID(id) id, title, year, director, duration, poster, rate
+        FROM movie WHERE id = UUID_TO_BIN(?);`,
+        [id]
+      )
+
+      if (updatedMovieData.length === 0) {
+        throw new Error('Movie not found after update')
+      }
+
+      const updatedMovie = {
+        id: updatedMovieData[0].id,
+        title: updatedMovieData[0].title,
+        year: updatedMovieData[0].year,
+        director: updatedMovieData[0].director,
+        duration: updatedMovieData[0].duration,
+        poster: updatedMovieData[0].poster,
+        rate: updatedMovieData[0].rate
+      }
+
+      return updatedMovie
+    } catch (error) {
+      console.error('Error updating movie:', error)
+      throw new Error('Error updating movie')
+    }
   }
 }
