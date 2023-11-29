@@ -16,17 +16,17 @@ export class MovieModel {
     if (genre) {
       const lowerCaseGenre = genre.toLowerCase()
 
-      // Buscar el ID del género proporcionado
+      // Buscar el ID del género proporcionado. Si no se encuentra el género, retornar un array vacío.
+
       const [genres] = await connection.query('SELECT id, name FROM genre WHERE LOWER(name) = ?;', [lowerCaseGenre])
 
-      // Si no se encuentra el género, retornar un array vacío
       if (genres.length === 0) return []
 
-      // Obtener el ID del primer resultado de género
-      const [{ id }] = genres
+      const [{ id }] = genres // Obtener el ID del primer resultado de género
+
+      // Obtener todas las películas asociadas al género desde la tabla movie_genres
 
       try {
-        // Obtener todas las películas asociadas al género desde la tabla movie_genres
         const [moviesData] = await connection.query(
           `SELECT BIN_TO_UUID(m.id) id, m.title, m.year, m.director, m.duration, m.poster, m.rate, GROUP_CONCAT(g.name) AS genres
             FROM movie m
@@ -87,6 +87,7 @@ export class MovieModel {
     const movieData = movies[0]
 
     // Obtener los géneros asociados a la película
+
     const [genresData] = await connection.query(
       `SELECT g.name
         FROM genre g
@@ -98,6 +99,7 @@ export class MovieModel {
     const genres = genresData.map(genre => genre.name)
 
     // Formatear la película con los géneros obtenidos
+
     const formattedMovie = {
       // id: movieData.id,
       title: movieData.title,
@@ -112,21 +114,12 @@ export class MovieModel {
     return formattedMovie
   }
 
-  static async create ({ input }) {
-    const {
-      genre: genreInput, // genre is an array
-      title,
-      year,
-      duration,
-      director,
-      rate,
-      poster
-    } = input
-
-    let movieId
-
+  static async create ({ input }) { // genre es un array
     try {
+      const { genre: genreInput, title, year, duration, director, rate, poster } = input
+
       // Insertar la película en la tabla movie
+
       const [uuidResult] = await connection.query('SELECT UUID() uuid;')
       const [{ uuid }] = uuidResult
 
@@ -136,27 +129,37 @@ export class MovieModel {
         [title, year, director, duration, poster, rate]
       )
 
-      movieId = insertMovie.insertId // Obtener el ID de la película insertada
+      const movieId = insertMovie.insertId
 
       // Insertar los géneros asociados a la película en la tabla movie_genres
+
       for (const genre of genreInput) {
         const [genreIdResult] = await connection.query(
           'SELECT id FROM genre WHERE name = ?;',
-          [genre]
-        )
+          [genre])
 
         if (genreIdResult.length > 0) {
-          const [{ id: genreId }] = genreIdResult // Obtener directamente el ID del resultado
-
-          // Insertar en movie_genres con los IDs correctos de película y género
-          await connection.query(
-            `INSERT INTO movie_genres (movie_id, genre_id) VALUES (UUID_TO_BIN("${uuid}"), ?);`,
-            [genreId]
-          )
+          const [{ id: genreId }] = genreIdResult
+          await connection.query(`INSERT INTO movie_genres (movie_id, genre_id) 
+          VALUES (UUID_TO_BIN("${uuid}"), ?);`,
+          [genreId])
         }
       }
-    } catch (e) {
-      console.error('Error creating movie:', e) // Registrar el error detallado
+
+      const movieDetails = {
+        title,
+        year,
+        director,
+        duration,
+        poster,
+        rate,
+        genre: genreInput
+      }
+
+      // Retornar los datos de la película excepto el ID
+      return movieDetails
+    } catch (error) {
+      console.error('Error creating movie:', error) // Registrar el error detallado
       throw new Error('Error creating movie')
     }
   }
