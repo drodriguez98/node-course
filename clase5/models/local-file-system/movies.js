@@ -5,12 +5,7 @@ const movies = readJSON('./movies.json')
 
 export class MovieModel {
   static async getAll ({ genre }) {
-    if (genre) {
-      return movies.filter(
-        movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())
-      )
-    }
-
+    if (genre) { return movies.filter(movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())) }
     return movies
   }
 
@@ -24,16 +19,13 @@ export class MovieModel {
       id: randomUUID(),
       ...input
     }
-
     movies.push(newMovie)
-
     return newMovie
   }
 
   static async delete ({ id }) {
     const movieIndex = movies.findIndex(movie => movie.id === id)
     if (movieIndex === -1) return false
-
     movies.splice(movieIndex, 1)
     return true
   }
@@ -41,7 +33,6 @@ export class MovieModel {
   static async update ({ id, input }) {
     const movieIndex = movies.findIndex(movie => movie.id === id)
     if (movieIndex === -1) return false
-
     movies[movieIndex] = {
       ...movies[movieIndex],
       ...input

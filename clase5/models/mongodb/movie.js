@@ -25,7 +25,6 @@ async function connect () {
 export class MovieModel {
   static async getAll ({ genre }) {
     const db = await connect()
-
     if (genre) {
       return db.find({
         genre: {
@@ -36,7 +35,6 @@ export class MovieModel {
         }
       }).toArray()
     }
-
     return db.find({}).toArray()
   }
 
@@ -48,9 +46,7 @@ export class MovieModel {
 
   static async create ({ input }) {
     const db = await connect()
-
     const { insertedId } = await db.insertOne(input)
-
     return {
       id: insertedId,
       ...input
@@ -67,11 +63,8 @@ export class MovieModel {
   static async update ({ id, input }) {
     const db = await connect()
     const objectId = new ObjectId(id)
-
     const { ok, value } = await db.findOneAndUpdate({ _id: objectId }, { $set: input }, { returnNewDocument: true })
-
     if (!ok) return false
-
     return value
   }
 }
